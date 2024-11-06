@@ -1,0 +1,45 @@
+# Byggrelaterade filer
+bin/
+obj/
+
+# Visual Studio-specifika filer
+.vscode/
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Loggfiler
+*.log
+
+# Paket och beroenden
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# Publiceringsfiler
+publish/
+*.Publish.xml
+
+# Konfigurationsfiler
+appsettings.Development.json
+
+# Backup- och tempfiler
+*.tmp
+*.bak
+*.swp
+
+# Kompilerade DLL- och PDB-filer
+*.dll
+*.pdb
+
+# Resurser och användarinställningar
+*.rsuser
+*.userprefs
+*.csproj.user
+
+# Node-modules om du använder JS-ramverk med ditt projekt
+node_modules/
