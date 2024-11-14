@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 public class JeopardyGame
 {
@@ -10,10 +11,8 @@ public class JeopardyGame
     static int cat3_100 = 100, cat3_200 = 200, cat3_300 = 300, cat3_400 = 400, cat3_500 = 500;
     static int cat4_100 = 100, cat4_200 = 200, cat4_300 = 300, cat4_400 = 400, cat4_500 = 500;
 
-
     // För att spela ljud i gissa ljudet
     static SoundManager soundManager = new SoundManager();
-
 
     // Startar spelet och välkomnar
     public void StartGame()
@@ -30,7 +29,6 @@ public class JeopardyGame
         Console.WriteLine("Spelare 1, var god skriv in ditt namn:");
         Player player1 = new Player(Console.ReadLine() ?? "Spelare 1");
 
-       
         Console.WriteLine("Spelare 2, var god skriv in ditt namn:");
         Player player2 = new Player(Console.ReadLine() ?? "Spelare 2");
 
@@ -52,8 +50,7 @@ public class JeopardyGame
         PlayGame(player1, player2);
     }
 
-
-     // Visar presentation för varje spelare beroende på namn
+    // Visar presentation för varje spelare beroende på namn
     static void PresentPlayer(string name)
     {
         if (name.ToLower().Contains("krister"))
@@ -86,7 +83,7 @@ public class JeopardyGame
         }
     }
 
-    //spelreglerna
+    // spelreglerna
     static void PresentGameRules()
     {
         Console.Clear();
@@ -102,8 +99,7 @@ public class JeopardyGame
         Console.Clear();
     }
 
-
-     // Visar kategorierna och poängen
+    // Visar kategorierna och poängen
     static void PresentCategories()
     {
         Console.OutputEncoding = Encoding.UTF8;
@@ -140,12 +136,12 @@ public class JeopardyGame
 
         Console.WriteLine("+--------------------------+--------------------------+--------------------------+--------------------------+");
     }
-    // poäng om en fråga finns annars en tom sträng för att visa att po'nginte finns kvar
+
+    // Poäng om en fråga finns, annars en tom sträng för att visa att poäng inte finns kvar
     static string DisplayPoints(int points)
     {
         return points > 0 ? points.ToString() : " ";
     }
-
 
     // Spelmetod för att hantera kategorier, frågor och poäng
     static void PlayGame(Player player1, Player player2)
@@ -195,7 +191,6 @@ public class JeopardyGame
         Console.WriteLine("**************************************\n");
     }
 
-
     // Läser val av kategori från användaren
     static int ReadCategoryChoice()
     {
@@ -206,6 +201,7 @@ public class JeopardyGame
         }
         return choice;
     }
+
     // Läser poängval för frågan
     static int ReadPointsChoice()
     {
@@ -216,7 +212,8 @@ public class JeopardyGame
         }
         return choice;
     }
-    // ger poängen för vald kategori och poäng
+
+    // Ger poängen för vald kategori och poäng
     static int GetPointsForCategory(int category, int points)
     {
         return category switch
@@ -228,7 +225,8 @@ public class JeopardyGame
             _ => 0
         };
     }
-      // Ställer frågan och kontrollerar svaret
+
+    // Ställer frågan och kontrollerar svaret
     static bool AskQuestion(int category, int points, Player player1, Player player2, Player currentPlayer)
     {
         string question = "";
@@ -387,15 +385,15 @@ public class JeopardyGame
                 break;
         }
 
-
-         // hantering av svaren
+        // hantering av svaren
         Console.Clear();
         DisplayPlayerScores(player1, player2);
         Console.WriteLine("Tryck 'A' för Spelare 1 eller 'L' för Spelare 2:");
+        Console.WriteLine("om ingen kan tryck Enter:");
         Console.WriteLine();
         Console.WriteLine($"Fråga för {points} poäng:\n");
         Console.WriteLine($"{question}\n");
-        StartTimer(7);
+        StartTimerWithKeyCheck(7);
 
         Console.WriteLine("\nTryck 'A' för Spelare 1 eller 'L' för Spelare 2:");
         var key = Console.ReadKey().Key;
@@ -426,13 +424,29 @@ public class JeopardyGame
             return false;
         }
     }
-       // timern för frågan
-    static void StartTimer(int seconds)
+
+    //  timer för att avsluta om någon trycker på tangent
+    static void StartTimerWithKeyCheck(int seconds)
     {
-        for (int i = seconds; i > 0; i--)
+        CancellationTokenSource cts = new CancellationTokenSource();
+
+        Task.Run(() =>
         {
-            Console.WriteLine($"Tid kvar: {i} sekunder");
-            Thread.Sleep(1000);
-        }
+            for (int i = seconds; i > 0; i--)
+            {
+                if (cts.Token.IsCancellationRequested) break;
+                Console.WriteLine($"Tid kvar: {i} sekunder");
+                Thread.Sleep(1000);
+            }
+        }, cts.Token);
+
+        Task.Run(() =>
+        {
+            ConsoleKey keyPressed = Console.ReadKey(true).Key;
+            if (keyPressed == ConsoleKey.A || keyPressed == ConsoleKey.L)
+            {
+                cts.Cancel();
+            }
+        }).Wait();
     }
 }
