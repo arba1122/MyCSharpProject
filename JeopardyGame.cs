@@ -425,28 +425,34 @@ public class JeopardyGame
         }
     }
 
-    //  timer för att avsluta om någon trycker på tangent
-    static void StartTimerWithKeyCheck(int seconds)
+    // Timer som identifierar vem som trycker först
+    static Player StartTimerWithKeyCheck(int seconds, Player player1, Player player2)
     {
-        CancellationTokenSource cts = new CancellationTokenSource();
+        Player answeringPlayer = null;
 
-        Task.Run(() =>
+        // Starta en timer
+        for (int i = seconds; i > 0; i--)
         {
-            for (int i = seconds; i > 0; i--)
-            {
-                if (cts.Token.IsCancellationRequested) break;
-                Console.WriteLine($"Tid kvar: {i} sekunder");
-                Thread.Sleep(1000);
-            }
-        }, cts.Token);
+            Console.WriteLine($"Tid kvar: {i} sekunder");
+            Thread.Sleep(1000);
 
-        Task.Run(() =>
-        {
-            ConsoleKey keyPressed = Console.ReadKey(true).Key;
-            if (keyPressed == ConsoleKey.A || keyPressed == ConsoleKey.L)
+            // Kolla om en tangent trycks under nedräkningen
+            if (Console.KeyAvailable)
             {
-                cts.Cancel();
+                ConsoleKey keyPressed = Console.ReadKey(true).Key;
+                if (keyPressed == ConsoleKey.A)
+                {
+                    answeringPlayer = player1;
+                    break;
+                }
+                else if (keyPressed == ConsoleKey.L)
+                {
+                    answeringPlayer = player2;
+                    break;
+                }
             }
-        }).Wait();
+        }
+
+        return answeringPlayer;
     }
 }
