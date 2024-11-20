@@ -7,8 +7,7 @@ public class Player
 
     public Player(string name)
     {
-        // Använder "Anonym Spelare" om name inte fylls i 
-        Name = string.IsNullOrEmpty(name) ? "Anonym Spelare" : name;
+        Name = name;
         Score = 0;
     }
 }
