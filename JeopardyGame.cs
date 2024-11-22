@@ -138,38 +138,57 @@ public class JeopardyGame
         return points > 0 ? points.ToString() : " ";
     }
 
+    static bool AllQuestionsAnswered()
+    {
+    return cat1_100 == 0 && cat1_200 == 0 && cat1_300 == 0 && cat1_400 == 0 && cat1_500 == 0 &&
+           cat2_100 == 0 && cat2_200 == 0 && cat2_300 == 0 && cat2_400 == 0 && cat2_500 == 0 &&
+           cat3_100 == 0 && cat3_200 == 0 && cat3_300 == 0 && cat3_400 == 0 && cat3_500 == 0 &&
+           cat4_100 == 0 && cat4_200 == 0 && cat4_300 == 0 && cat4_400 == 0 && cat4_500 == 0;
+    }
+
+
     static void PlayGame(Player player1, Player player2)
     {
-        Player currentPlayer = player1;
+    Player currentPlayer = player1;
 
-        while (true)
+    while (true)
+    {
+        // Kontrollera om alla frågor är slut
+        if (AllQuestionsAnswered())
         {
             Console.Clear();
-            DisplayPlayerScores(player1, player2);
-            PresentCategories();
-            Console.WriteLine($"{currentPlayer.Name}, välj en kategori (1-4) och tryck Enter:");
-            int categoryChoice = ReadCategoryChoice();
+            Console.WriteLine("Spelet är slut! Dags för finalfrågan!");
+            PlayFinal(player1, player2);
+            return; // Avsluta spelet efter finalen
+        }
 
-            Console.WriteLine("Välj poäng (100, 200, 300, 400, 500):");
-            int pointsChoice = ReadPointsChoice();
+        Console.Clear();
+        DisplayPlayerScores(player1, player2);
+        PresentCategories();
 
-            int selectedPoints = GetPointsForCategory(categoryChoice, pointsChoice);
-            if (selectedPoints == 0)
-            {
-                Console.WriteLine("Den här frågan har redan ställts! Välj en annan fråga.");
-                continue;
-            }
+        Console.WriteLine($"{currentPlayer.Name}, välj en kategori (1-4) och tryck Enter:");
+        int categoryChoice = ReadCategoryChoice();
 
-            bool correctAnswer = AskQuestion(categoryChoice, pointsChoice, player1, player2, currentPlayer);
+        Console.WriteLine("Välj poäng (100, 200, 300, 400, 500):");
+        int pointsChoice = ReadPointsChoice();
 
-            if (correctAnswer)
-            {
-                Console.WriteLine($"{currentPlayer.Name} svarade rätt och får välja igen!");
-            }
-            else
-            {
-                currentPlayer = currentPlayer == player1 ? player2 : player1;
-            }
+        int selectedPoints = GetPointsForCategory(categoryChoice, pointsChoice);
+        if (selectedPoints == 0)
+        {
+            Console.WriteLine("Den här frågan har redan ställts! Välj en annan fråga.");
+            continue;
+        }
+
+        bool correctAnswer = AskQuestion(categoryChoice, pointsChoice, player1, player2, currentPlayer);
+
+        if (correctAnswer)
+        {
+            Console.WriteLine($"{currentPlayer.Name} svarade rätt och får välja igen!");
+        }
+        else
+        {
+            currentPlayer = currentPlayer == player1 ? player2 : player1;
+        }
 
             Console.Clear();
             DisplayPlayerScores(player1, player2);
@@ -324,7 +343,7 @@ public class JeopardyGame
                         question = "Gissa Ljudet";
                         answer = "Indiana Jones";
                         explanation = "Musik från Indiana Jones.";
-                        soundManager.PlaySound("C:C:\\PROJEKT\\OopProjekt\\sounds\\Indiana Jones Theme Song [HD] [ ezmp3.cc ]-[AudioTrimmer.com].wav");
+                        soundManager.PlaySound("C:\\PROJEKT\\OopProjekt\\sounds\\Indiana Jones Theme Song [HD] [ ezmp3.cc ]-[AudioTrimmer.com].wav");
                         cat3_400 = 0;
                         break;
                     case 500:
@@ -341,7 +360,7 @@ public class JeopardyGame
                 switch (points)
                 {
                     case 100:
-                        question = "Sant eller falskt: Människor nyser snabbare än en gepard kan springa.";
+                        question = "Sant eller falskt: Människor nyser snabbare än en geopard kan springa.";
                         answer = "Sant";
                         explanation = "Nysningar kan komma upp i 160 km/h.";
                         cat4_100 = 0;
@@ -446,5 +465,122 @@ public class JeopardyGame
         Task.WhenAny(timerTask, keyPressTask).Wait();
         return answeringPlayer;
     }
+
+
+    //FINAlen
+
+    
+
+    static void PlayFinal(Player player1, Player player2)
+    {
+        Console.Clear();
+        Console.WriteLine("Spelet är slut! Dags för finalfrågan.");
+        Console.WriteLine("\nKategorin är: Oväntade Uppfinningar");
+        Console.WriteLine("Ni kommer nu få satsa era poäng på sista frågan och ni har 20 sekunder på er.\n");
+
+        // Spelare 1 satsar sina poäng
+        Console.WriteLine($"{player1.Name}, du har {player1.Score} poäng.");
+        Console.WriteLine("Hur mycket vill du satsa?");
+        int player1Bet = ReadBet(player1.Score);
+
+        // Spelare 2 satsar sina poäng
+        Console.WriteLine($"{player2.Name}, du har {player2.Score} poäng.");
+        Console.WriteLine("Hur mycket vill du satsa?");
+        int player2Bet = ReadBet(player2.Score);
+
+        // Presentera finalfrågan
+        Console.Clear();
+        Console.WriteLine("Finalfrågan lyder:");
+        Console.WriteLine("Denna oväntade uppfinning, skapad av en svensk ingenjör 1949, förändrade hur vi arbetar i köket och gjorde att vi kunde säga adjö till trasslig knytning. Vad är det?");
+        Console.WriteLine("\nTryck på er knapp för att svara!");
+
+        // Starta timer och få spelare som trycker först
+        Player answeringPlayer = StartTimerWithKeyCheck(20, player1, player2);
+
+        if (answeringPlayer == null)
+        {
+            Console.WriteLine("Ingen tryckte på knappen i tid. Ingen får poäng.");
+        }
+        else
+        {
+            Console.WriteLine($"\n{answeringPlayer.Name}, vad är ditt svar?");
+            string playerAnswer = Console.ReadLine();
+
+            string correctAnswer = "Plastpåsklämman";
+
+            if (playerAnswer.Equals(correctAnswer, StringComparison.OrdinalIgnoreCase))
+            {
+                if (answeringPlayer == player1)
+                {
+                    player1.Score += player1Bet;
+                    Console.WriteLine($"{player1.Name} svarade rätt och vinner {player1Bet} poäng!");
+                }
+                else
+                {
+                    player2.Score += player2Bet;
+                    Console.WriteLine($"{player2.Name} svarade rätt och vinner {player2Bet} poäng!");
+                }
+            }
+            else
+            {
+                if (answeringPlayer == player1)
+                {
+                    player1.Score -= player1Bet;
+                    Console.WriteLine($"{player1.Name} svarade fel och förlorar {player1Bet} poäng.");
+                }
+                else
+                {
+                    player2.Score -= player2Bet;
+                    Console.WriteLine($"{player2.Name} svarade fel och förlorar {player2Bet} poäng.");
+                }
+            }
+        }
+
+        // Presentera vinnaren
+        Console.Clear();
+        Console.WriteLine("Finalen är över! Här är resultatet:");
+        DisplayPlayerScores(player1, player2);
+
+        if (player1.Score > player2.Score)
+        {
+            Console.WriteLine($"{player1.Name} vinner spelet med {player1.Score} poäng! Grattis!");
+        }
+        else if (player2.Score > player1.Score)
+        {
+            Console.WriteLine($"{player2.Name} vinner spelet med {player2.Score} poäng! Grattis!");
+        }
+        else
+        {
+            Console.WriteLine("Spelet slutar oavgjort! Bra kämpat båda två!");
+        }
+    }
+
+    static int ReadBet(int maxBet)
+    {
+        int bet;
+        while (!int.TryParse(Console.ReadLine(), out bet) || bet < 0 || bet > maxBet)
+        {
+            Console.WriteLine($"Ange en giltig insats mellan 0 och {maxBet}:");
+        }
+        return bet;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
