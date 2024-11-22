@@ -1,9 +1,12 @@
+//biblotek
 using System;
 using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+
+//klassen för själva spelet
 public class JeopardyGame
 {
     static int cat1_100 = 100, cat1_200 = 200, cat1_300 = 300, cat1_400 = 400, cat1_500 = 500;
@@ -12,7 +15,10 @@ public class JeopardyGame
     static int cat4_100 = 100, cat4_200 = 200, cat4_300 = 300, cat4_400 = 400, cat4_500 = 500;
 
     static SoundManager soundManager = new SoundManager();
+     
 
+
+     // startar spelt
     public void StartGame()
     {
         Console.WriteLine("*      VÄLKOMMEN TILL JEOPARDY!     *");
@@ -25,11 +31,13 @@ public class JeopardyGame
 
         // Spelare 1
         Console.WriteLine("Spelare 1, var god skriv in ditt namn:");
-        Player player1 = new Player(Console.ReadLine() ?? "Spelare 1");
+        string inputName1 = Console.ReadLine();
+        Player player1 = new Player(string.IsNullOrWhiteSpace(inputName1) ? "Anonym Spelare" : inputName1);
 
         // Spelare 2
         Console.WriteLine("Spelare 2, var god skriv in ditt namn:");
-        Player player2 = new Player(Console.ReadLine() ?? "Spelare 2");
+        string inputName2 = Console.ReadLine();
+        Player player2 = new Player(string.IsNullOrWhiteSpace(inputName2) ? "Anonym Spelare" : inputName2);
 
         Console.Clear();
 
@@ -81,6 +89,7 @@ public class JeopardyGame
         }
     }
 
+    //spelregler
     static void PresentGameRules()
     {
         Console.Clear();
@@ -96,6 +105,8 @@ public class JeopardyGame
         Console.Clear();
     }
 
+
+     // spelkategorierna   
     static void PresentCategories()
     {
         Console.OutputEncoding = Encoding.UTF8;
@@ -146,14 +157,14 @@ public class JeopardyGame
            cat4_100 == 0 && cat4_200 == 0 && cat4_300 == 0 && cat4_400 == 0 && cat4_500 == 0;
     }
 
-
+    // körning huvudspel
     static void PlayGame(Player player1, Player player2)
     {
     Player currentPlayer = player1;
 
     while (true)
     {
-        // Kontrollera om alla frågor är slut
+        // Kontrollera om alla frågor är slut loop
         if (AllQuestionsAnswered())
         {
             Console.Clear();
@@ -555,6 +566,8 @@ public class JeopardyGame
         }
     }
 
+
+    //satsningen
     static int ReadBet(int maxBet)
     {
         int bet;
@@ -564,22 +577,6 @@ public class JeopardyGame
         }
         return bet;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
