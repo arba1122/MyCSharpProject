@@ -303,35 +303,35 @@ public class JeopardyGame
                         question = "Gissa Ljudet";
                         answer = "Super Mario";
                         explanation = "Ljud från Super Mario.";
-                        soundManager.PlaySound("C:/PROJEKT/OopProjekt/sounds/Super Mario Bros. Theme.wav");
+                        soundManager.PlaySound("C:\\PROJEKT\\OopProjekt\\sounds\\Super Mario Bros. Theme Song [ ezmp3.cc ]-[AudioTrimmer.com].wav");
                         cat3_100 = 0;
                         break;
                     case 200:
                         question = "Gissa Ljudet";
                         answer = "The Flintstones";
                         explanation = "Ljud från 'The Flintstones'.";
-                        soundManager.PlaySound("C:/PROJEKT/OopProjekt/sounds/Flintstones.wav");
+                        soundManager.PlaySound("C:\\PROJEKT\\OopProjekt\\sounds\\Yabba Dabba Doo with Fred Flintstone! [ ezmp3.cc ]-[AudioTrimmer.com].wav");
                         cat3_200 = 0;
                         break;
                     case 300:
                         question = "Gissa Ljudet";
                         answer = "Psycho";
                         explanation = "Klassiskt ljud från 'Psycho'.";
-                        soundManager.PlaySound("C:/PROJEKT/OopProjekt/sounds/Psycho.wav");
+                        soundManager.PlaySound("C:\\PROJEKT\\OopProjekt\\sounds\\Psycho Full Violin Screech [ ezmp3.cc ]-[AudioTrimmer.com].wav");
                         cat3_300 = 0;
                         break;
                     case 400:
                         question = "Gissa Ljudet";
                         answer = "Indiana Jones";
                         explanation = "Musik från Indiana Jones.";
-                        soundManager.PlaySound("C:/PROJEKT/OopProjekt/sounds/Indiana Jones.wav");
+                        soundManager.PlaySound("C:C:\\PROJEKT\\OopProjekt\\sounds\\Indiana Jones Theme Song [HD] [ ezmp3.cc ]-[AudioTrimmer.com].wav");
                         cat3_400 = 0;
                         break;
                     case 500:
                         question = "Gissa Ljudet";
                         answer = "Hesa Fredrik";
                         explanation = "Ljud från Hesa Fredrik.";
-                        soundManager.PlaySound("C:/PROJEKT/OopProjekt/sounds/Hesa Fredrik.wav");
+                        soundManager.PlaySound("C:\\PROJEKT\\OopProjekt\\sounds\\Hesa fredrik.wav");
                         cat3_500 = 0;
                         break;
                 }
